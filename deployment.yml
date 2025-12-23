@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-health-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-health
+  template:
+    metadata:
+      labels:
+        app: node-health
+    spec:
+      containers:
+      - name: node-health
+        image: 159014723635.dkr.ecr.us-east-1.amazonaws.com/node-health:1.0
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
